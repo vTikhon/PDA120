@@ -5,7 +5,7 @@ pd.set_option('display.width', 1000)        # Увеличить ширину о
 
 if __name__ == '__main__':
     print('\nчитаем датасет в память из внешнего источника:')
-    df = Reader.reader('https://raw.githubusercontent.com/Semendyeav/datasets/main/PDA120_Moscow_Price.csv')
+    df = Reader.read_csv('https://raw.githubusercontent.com/Semendyeav/datasets/main/PDA120_Moscow_Price.csv')
     print(df.head(10))
 
     print('\nпосмотрим на пропуски в данных:')
