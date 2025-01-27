@@ -6,7 +6,8 @@ class DataPreparation:
     def __init__(self):
         pass
 
-    def prepare_data(self, df, exclude_features, target):
+    @staticmethod
+    def prepare_data(df, exclude_features, target):
         # Разделяем данные на X, y
         X = df.drop(exclude_features, axis=1)
         y = df[target].to_numpy().reshape(-1, 1)
