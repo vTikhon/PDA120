@@ -14,7 +14,7 @@ class Normalizer:
         y_train_normalized = np.log1p(y_train)
         X_test_normalized = np.log1p(X_test)
         y_test_normalized = np.log1p(y_test)
-        return X_train_normalized, y_train_normalized, X_test_normalized, y_test_normalized
+        return X_train_normalized, X_test_normalized, y_train_normalized, y_test_normalized
 
     @staticmethod
     def min_max_scaling(X_train, X_test, y_train, y_test, feature_range=(0, 1)):
