@@ -1,4 +1,4 @@
-from scipy.stats import kruskal, mannwhitneyu, chi2_contingency, chisquare, norm, ttest_1samp, ttest_ind
+from scipy.stats import kruskal, mannwhitneyu, chi2_contingency, chisquare, norm, ttest_1samp, ttest_ind, shapiro
 from scipy.stats import wilcoxon, friedmanchisquare
 from statsmodels.stats.contingency_tables import mcnemar, cochrans_q
 import pandas as pd
@@ -45,7 +45,26 @@ class StatCriteria:
         return stat, p_value
 
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ДАННЫЕ) N=1
-    # Критерий Стьюдента (одновыброчный)
+    # Критерий Шапиро-Уилка соответствия нормальному распределению
+    # Нулевая гипотеза (H0): Данные соответствуют нормальному распределению.
+    def shapiro(self, df, feature_name):
+        df_feature = df[feature_name]
+        df_feature = df_feature.dropna()
+        if len(df_feature) == 0:
+            raise ValueError("Выборка пуста после исключения пропусков.")
+        stat, p_value = shapiro(df_feature)
+        print(f"Shapiro-Wilk Test")
+        print(f'statistic = {stat:.3f}')
+        if p_value < self.alpha:
+            print(f"Данные не соответствуют нормальному распределению (p-value = {p_value:.3f}).")
+        elif p_value >= self.alpha:
+            print(f"Данные соответствуют нормальному распределению (p-value = {p_value:.3f}).")
+        else:
+            print(f"анализ не проведён (p-value = {p_value:.3f}).")
+        return stat, p_value
+
+    # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ДАННЫЕ) N=1
+    # Критерий Стьюдента (одновыборочный)
     # Нулевая гипотеза (H0): Среднее значение выборки равно заданному значению.
     def ttest_1samp(self, df, feature_name, hypothesized_mean):
         df_feature = df[feature_name]
