@@ -55,17 +55,17 @@ class Encoder:
     def targetEncoder(df_feature, df_target):
         encoder = ce.TargetEncoder()
         df_feature_encoded = encoder.fit_transform(df_feature, df_target)
-        return df_feature_encoded
+        return df_feature_encoded, encoder
 
     @staticmethod
     def leaveOneOutEncoder(df_feature, df_target):
         encoder = ce.LeaveOneOutEncoder()
         df_feature_encoded = encoder.fit_transform(df_feature, df_target)
-        return df_feature_encoded
+        return df_feature_encoded, encoder
 
     @staticmethod
     def jamesSteinEncoder(df_feature, df_target):
         encoder = ce.JamesSteinEncoder()
         df_feature_encoded = encoder.fit_transform(df_feature, df_target)
-        return df_feature_encoded
+        return df_feature_encoded, encoder
 

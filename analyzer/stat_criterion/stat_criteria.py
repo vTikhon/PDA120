@@ -42,7 +42,6 @@ class StatCriteria:
             print(f"Среднее значение выборки равно заданному значению (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
-        return stat, p_value
 
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ДАННЫЕ) N=1
     # Критерий Шапиро-Уилка соответствия нормальному распределению
@@ -61,7 +60,6 @@ class StatCriteria:
             print(f"Данные соответствуют нормальному распределению (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
-        return stat, p_value
 
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ДАННЫЕ) N=1
     # Критерий Стьюдента (одновыборочный)
@@ -80,7 +78,6 @@ class StatCriteria:
             print(f"Среднее значение выборки равно заданному значению (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
-        return stat, p_value
 
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ДАННЫЕ) N=2
     # Критерий Стьюдента (параметрический для непрерывных данных)
@@ -100,7 +97,6 @@ class StatCriteria:
             print(f"Средние значения в двух выборках равны (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
-        return stat, p_value
 
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ДАННЫЕ) N=2
     # U-критерий Манна-Уитни используется для сравнения различий между ДВУМЯ (N=2) независимыми выборками,
@@ -110,7 +106,7 @@ class StatCriteria:
         groups = self._prepare_groups(df, feature_name, target_name)
         if len(groups) != 2:
             raise ValueError("Для теста Манна-Уитни требуется ровно две группы.")
-        stat, p_value = mannwhitneyu(*groups)
+        stat, p_value = mannwhitneyu(*groups, alternative='two-sided')
         print('Mann-Whitney U test')
         print(f'U_statistic = {stat:.3f}')
         if p_value < self.alpha:
@@ -119,7 +115,6 @@ class StatCriteria:
             print(f"Распределения двух выборок равны (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
-        return stat, p_value
 
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ДАННЫЕ) N>=3
     # Критерий Краскела - Уоллиса (непараметрический для непрерывных данных)
@@ -139,7 +134,6 @@ class StatCriteria:
             print(f"Медианы всех групп равны (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
-        return stat, p_value
 
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ КАТЕГОРИАЛЬНЫЕ ДАННЫЕ) N=1
     # Критерий хи-квадрат
@@ -159,7 +153,6 @@ class StatCriteria:
             print(f"Наблюдаемые частоты согласуются с ожидаемыми частотами (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
-        return stat, p_value
 
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ КАТЕГОРИАЛЬНЫЕ ДАННЫЕ) N=2
     # Критерий хи-квадрат
@@ -167,20 +160,18 @@ class StatCriteria:
     # между ДВУМЯ (N=2) категориальными переменными
     # Нулевая гипотеза (H0): Две переменные независимы (отсутствуют статистически значимые связи).
     def chi2_contingency(self, df, feature_name, target_name):
-        groups = self._prepare_groups(df, feature_name, target_name)
-        if len(groups) != 2:
-            raise ValueError("Для критерия независимости хи-квадрат требуется ровно две группы.")
-        contingency_table = pd.crosstab(*groups)
+        if df[feature_name].nunique() < 2 or df[target_name].nunique() < 2:
+            raise KeyError(f"Ошибка: для переменных '{feature_name}' и '{target_name}' должно быть минимум 2 уникальных значения.")
+        contingency_table = pd.crosstab(df[feature_name], df[target_name])
         stat, p_value, dof, expected = chi2_contingency(contingency_table)
         print('Chi-square test')
-        print(f'chisq_statistic = {stat:.3f}, dof = {dof:.3f}, expected = {expected:.3f}')
+        print(f'chisq_statistic = {stat:.3f}, dof = {dof:.3f}')
         if p_value < self.alpha:
             print(f"Две переменные зависимы (p-value = {p_value:.3f}).")
         elif p_value >= self.alpha:
             print(f"Две переменные независимы (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
-        return stat, p_value, dof, expected
 
     # ЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ИЛИ КАТЕГОРИАЛЬНЫЕ ДАННЫЕ) N=2
     # Критерий Вилкоксона (непараметрический для непрерывных и порядковых данных)
@@ -222,7 +213,6 @@ class StatCriteria:
             print(f"Распределения во всех группах равны (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
-        return stat, p_value
 
     # ЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ КАТЕГОРИАЛЬНЫЕ ДАННЫЕ) N=2
     # Критерий Мак-Нимара (для категориальных зависимых данных)
@@ -230,29 +220,24 @@ class StatCriteria:
     # между ПАРНЫМИ (N=2) данными.
     # Нулевая гипотеза (H0): Доли согласия в двух связанных группах равны (отсутствуют статистически значимые различия).
     def mcnemar(self, df, feature_name, target_name):
-        groups = self._prepare_groups(df, feature_name, target_name)
-        if len(groups) != 2:
-            raise ValueError("Для теста Мак-Нимара требуется ровно две группы.")
-        # Создание контингентной таблицы
-        cross_tab = pd.crosstab(*groups)
+        if df[feature_name].nunique() < 2 or df[target_name].nunique() < 2:
+            raise KeyError(f"Ошибка: для переменных '{feature_name}' и '{target_name}' должно быть минимум 2 уникальных значения.")
+        contingency_table = pd.crosstab(df[feature_name], df[target_name])
         print("McNemar's test")
-        result = mcnemar(cross_tab, exact=True)  # Используется exact=True для точного теста (если требуется)
+        result = mcnemar(contingency_table, exact=True)  # Используется exact=True для точного теста (если требуется)
         print(result)
-        return result
 
     # ЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ КАТЕГОРИАЛЬНЫЕ ДАННЫЕ) N>=3
     # Q-тест Кокрана (Cochran's Q test) — это статистический тест,
     # используемый для определения наличия различий в доли успеха в нескольких (N>=3) связанных группах.
     # Q-тест Кокрана применяется, когда данные являются бинарными (успех/неудача) и измерены повторно в различных условиях.
     def cochrans_q(self, df, feature_name, target_name):
-        groups = self._prepare_groups(df, feature_name, target_name)
-        if len(groups) < 2:
-            raise ValueError("Для Q-теста Кокрана требуется хотя бы две группы.")
-        cross_tab = pd.crosstab(*groups)
+        if df[feature_name].nunique() < 2 or df[target_name].nunique() < 2:
+            raise KeyError(f"Ошибка: для переменных '{feature_name}' и '{target_name}' должно быть минимум 2 уникальных значения.")
+        contingency_table = pd.crosstab(df[feature_name], df[target_name])
         print("Cochran's Q test")
-        result = cochrans_q(cross_tab)
+        result = cochrans_q(contingency_table)
         print(result)
-        return result
 
 
 

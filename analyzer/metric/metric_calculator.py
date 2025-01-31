@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 
@@ -7,6 +8,10 @@ class MetricCalculator:
 
     @staticmethod
     def show_regression_metrics(y_test, y_pred):
+        if isinstance(y_test, pd.DataFrame):
+            y_test = y_test.values.flatten()
+        if isinstance(y_pred, pd.DataFrame):
+            y_pred = y_pred.values.flatten()
         # Коэффициент детерминации (R_square)
         print(f'R²: {r2_score(y_test, y_pred):.3f}')
         # Средняя абсолютная ошибка (Mean Absolute Error)
@@ -20,6 +25,10 @@ class MetricCalculator:
 
     @staticmethod
     def show_classification_metrics(y_test, y_pred, y_prob=None):
+        if isinstance(y_test, pd.DataFrame):
+            y_test = y_test.values.flatten()
+        if isinstance(y_pred, pd.DataFrame):
+            y_pred = y_pred.values.flatten()
         # Метрика корректности прогнозов — доля верно предсказанных классов
         print(f'Accuracy: {accuracy_score(y_test, y_pred):.2f}')
         # Метрика точности — доля объектов, предсказанных как положительные
