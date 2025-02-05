@@ -20,6 +20,9 @@ class ClassificationModel:
         model.fit(X_train, y_train)
         y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
         MetricCalculator.show_classification_metrics(y_test, y_pred)
+        print('__________')
+        print("Коэффициенты регуляризации:")
+        print(*[f"{feature}: {coef:.2f}" for feature, coef in zip(X_train.columns, model.coef_.flatten())], sep='\n')
         return y_test, y_pred
 
     def GaussianNB(self, X_train, X_test, y_train, y_test):
@@ -53,3 +56,4 @@ class ClassificationModel:
         tree.plot_tree(model)
         print(classification_report(y_test, y_pred))
         MetricCalculator.show_classification_metrics(y_test, y_pred)
+        return y_test, y_pred

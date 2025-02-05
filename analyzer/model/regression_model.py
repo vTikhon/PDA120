@@ -31,25 +31,29 @@ class RegressionModel:
         y_pred = pd.DataFrame(model.predict(X_test_plus_const), columns=y_test.columns)
         print(model.summary())
         MetricCalculator.show_regression_metrics(y_test, y_pred)
-        return y_train, y_test
+        return y_test, y_pred
 
     def Lasso(self, X_train, X_test, y_train, y_test,
               alpha=0.01):
-        lasso = Lasso(alpha=alpha)
-        lasso.fit(X_train, y_train)
-        y_pred = pd.DataFrame(lasso.predict(X_test), columns=y_test.columns)
-        print("Коэффициенты Lasso-регрессии:", lasso.coef_)
+        model = Lasso(alpha=alpha)
+        model.fit(X_train, y_train)
+        y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
         MetricCalculator.show_regression_metrics(y_test, y_pred)
-        return y_train, y_test
+        print('__________')
+        print("Коэффициенты Lasso-регрессии:")
+        print(*[f"{feature}: {coef:.2f}" for feature, coef in zip(X_train.columns, model.coef_.flatten())], sep='\n')
+        return y_test, y_pred
 
     def Ridge(self, X_train, X_test, y_train, y_test,
               alpha=0.01):
-        ridge = Ridge(alpha=alpha)
-        ridge.fit(X_train, y_train)
-        y_pred = pd.DataFrame(ridge.predict(X_test), columns=y_test.columns)
-        print("Коэффициенты Ridge-регрессии:", ridge.coef_)
+        model = Ridge(alpha=alpha)
+        model.fit(X_train, y_train)
+        y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
         MetricCalculator.show_regression_metrics(y_test, y_pred)
-        return y_train, y_test
+        print('__________')
+        print("Коэффициенты Ridge-регрессии:")
+        print(*[f"{feature}: {coef:.2f}" for feature, coef in zip(X_train.columns, model.coef_.flatten())], sep='\n')
+        return y_test, y_pred
 
     def GLM(self, X_train, X_test, y_train, y_test,
             prepend=False, family=sm.families.Gamma(link=sm.families.links.Log())):
@@ -60,5 +64,5 @@ class RegressionModel:
         y_pred = result.predict(X_test_plus_const)
         print(result.summary())
         MetricCalculator.show_regression_metrics(y_test, y_pred)
-        return y_train, y_test
+        return y_test, y_pred
 
