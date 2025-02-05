@@ -4,15 +4,15 @@ from collections import Counter
 from sklearn.metrics.pairwise import pairwise_distances
 
 
-class KNNHandMade:
+class KNNClassificationCustom:
 
     """
     :param k: Количество соседей.
     :param metric: Метрика расстояния ('euclidean', 'manhattan', 'cosine' и т.д.).
     :param weights: Веса соседей ('uniform' или 'distance').
     """
-    def __init__(self, k=3, metric='euclidean', weights='uniform'):
-        self.k = k
+    def __init__(self, n_neighbors=3, metric='euclidean', weights='uniform'):
+        self.n_neighbors = n_neighbors
         self.metric = metric
         self.weights = weights
 
@@ -44,7 +44,7 @@ class KNNHandMade:
         distances = pairwise_distances([x], self.X_train, metric=self.metric)[0]
 
         # Находим индексы k ближайших соседей
-        k_indices = np.argsort(distances)[:self.k]
+        k_indices = np.argsort(distances)[:self.n_neighbors]
         k_nearest_labels = [self.y_train[i] for i in k_indices]
 
         # Взвешенное голосование (если weights='distance')

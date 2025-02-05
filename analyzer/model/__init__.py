@@ -1,3 +1,3 @@
-from .KNN_hand_made import KNNHandMade
+from .KNN_classification_custom import KNNClassificationCustom
 from .regression_model import RegressionModel
 from .classification_model import ClassificationModel
