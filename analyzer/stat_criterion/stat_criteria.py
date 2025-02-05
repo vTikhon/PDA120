@@ -153,6 +153,7 @@ class StatCriteria:
             print(f"Наблюдаемые частоты согласуются с ожидаемыми частотами (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
+        return stat, p_value
 
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ КАТЕГОРИАЛЬНЫЕ ДАННЫЕ) N=2
     # Критерий хи-квадрат
@@ -172,6 +173,7 @@ class StatCriteria:
             print(f"Две переменные независимы (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
+        return stat, p_value, dof, expected
 
     # ЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ИЛИ КАТЕГОРИАЛЬНЫЕ ДАННЫЕ) N=2
     # Критерий Вилкоксона (непараметрический для непрерывных и порядковых данных)
@@ -213,6 +215,7 @@ class StatCriteria:
             print(f"Распределения во всех группах равны (p-value = {p_value:.3f}).")
         else:
             print(f"анализ не проведён (p-value = {p_value:.3f}).")
+        return stat, p_value
 
     # ЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ КАТЕГОРИАЛЬНЫЕ ДАННЫЕ) N=2
     # Критерий Мак-Нимара (для категориальных зависимых данных)
@@ -226,6 +229,7 @@ class StatCriteria:
         print("McNemar's test")
         result = mcnemar(contingency_table, exact=True)  # Используется exact=True для точного теста (если требуется)
         print(result)
+        return result
 
     # ЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ КАТЕГОРИАЛЬНЫЕ ДАННЫЕ) N>=3
     # Q-тест Кокрана (Cochran's Q test) — это статистический тест,
@@ -238,6 +242,6 @@ class StatCriteria:
         print("Cochran's Q test")
         result = cochrans_q(contingency_table)
         print(result)
-
+        return result
 
 
