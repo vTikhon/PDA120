@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-class LinearRegressionHandMade:
+class LinearRegressionCustom:
     def __init__(self):
         self.w = None
 

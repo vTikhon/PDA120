@@ -3,6 +3,7 @@ import statsmodels.api as sm
 from statsmodels.regression.linear_model import OLS
 from sklearn.linear_model import Lasso
 from sklearn.linear_model import Ridge
+from sklearn import svm
 from sklearn.preprocessing import PolynomialFeatures
 from analyzer.metric import MetricCalculator
 
@@ -31,7 +32,7 @@ class RegressionModel:
         y_pred = pd.DataFrame(model.predict(X_test_plus_const), columns=y_test.columns)
         print(model.summary())
         MetricCalculator.show_regression_metrics(y_test, y_pred)
-        return y_test, y_pred
+        return y_test, y_pred, model
 
     def Lasso(self, X_train, X_test, y_train, y_test,
               alpha=0.01):
@@ -42,7 +43,7 @@ class RegressionModel:
         print('__________')
         print("Коэффициенты Lasso-регрессии:")
         print(*[f"{feature}: {coef:.2f}" for feature, coef in zip(X_train.columns, model.coef_.flatten())], sep='\n')
-        return y_test, y_pred
+        return y_test, y_pred, model
 
     def Ridge(self, X_train, X_test, y_train, y_test,
               alpha=0.01):
@@ -53,7 +54,7 @@ class RegressionModel:
         print('__________')
         print("Коэффициенты Ridge-регрессии:")
         print(*[f"{feature}: {coef:.2f}" for feature, coef in zip(X_train.columns, model.coef_.flatten())], sep='\n')
-        return y_test, y_pred
+        return y_test, y_pred, model
 
     def GLM(self, X_train, X_test, y_train, y_test,
             prepend=False, family=sm.families.Gamma(link=sm.families.links.Log())):
@@ -64,5 +65,12 @@ class RegressionModel:
         y_pred = result.predict(X_test_plus_const)
         print(result.summary())
         MetricCalculator.show_regression_metrics(y_test, y_pred)
-        return y_test, y_pred
+        return y_test, y_pred, model
 
+    def SVR(self, X_train, X_test, y_train, y_test,
+            kernel='rbf', C=1.0, epsilon=0.1):
+        model = svm.SVR(kernel=kernel, C=C, epsilon=epsilon)
+        model.fit(X_train, y_train)
+        y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
+        MetricCalculator.show_regression_metrics(y_test, y_pred)
+        return y_test, y_pred, model
