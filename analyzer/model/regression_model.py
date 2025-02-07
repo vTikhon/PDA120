@@ -70,7 +70,7 @@ class RegressionModel:
     def SVR(self, X_train, X_test, y_train, y_test,
             kernel='rbf', C=1.0, epsilon=0.1):
         model = svm.SVR(kernel=kernel, C=C, epsilon=epsilon)
-        model.fit(X_train, y_train)
+        model.fit(X_train, y_train.values.ravel())
         y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
         MetricCalculator.show_regression_metrics(y_test, y_pred)
         return y_test, y_pred, model

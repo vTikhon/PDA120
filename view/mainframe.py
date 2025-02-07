@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, scrolledtext
-from launcher.launcher_script import LaunchPredict
+from launcher import LaunchPredict
 
 
 class MainFrame:

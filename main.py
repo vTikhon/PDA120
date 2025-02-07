@@ -1,4 +1,4 @@
-from view.mainframe import MainFrame
+from view import MainFrame
 
 
 if __name__ == "__main__":
