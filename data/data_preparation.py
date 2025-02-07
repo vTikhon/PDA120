@@ -1,6 +1,7 @@
 import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.utils import shuffle
 
 logging.basicConfig(
     filename='app.log',  # Имя файла для записи логов
@@ -16,6 +17,7 @@ class DataPreparation:
 
     @staticmethod
     def train_test_split(df, exclude_features, target):
+        df = shuffle(df).reset_index(drop=True)
         # Разделяем данные на X, y
         X = df.drop(exclude_features, axis=1)
         y = df[target]

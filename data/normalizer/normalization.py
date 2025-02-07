@@ -8,11 +8,9 @@ class Normalizer:
         pass
 
     @staticmethod
-    def log_norm(X_train, X_test, y_train, y_test):
-        # Проверка на отрицательные значения
+    def log1p_norm(X_train, X_test, y_train, y_test):
         if np.any(X_train < 0) or np.any(X_test < 0) or np.any(y_train < 0) or np.any(y_test < 0):
             raise ValueError("Все значения в данных должны быть неотрицательными для использования log1p.")
-
         X_train_normalized = pd.DataFrame(np.log1p(X_train), columns=X_train.columns)
         X_test_normalized = pd.DataFrame(np.log1p(X_test), columns=X_test.columns)
         y_train_normalized = pd.DataFrame(np.log1p(y_train), columns=y_train.columns)
@@ -20,61 +18,44 @@ class Normalizer:
         return X_train_normalized, X_test_normalized, y_train_normalized, y_test_normalized
 
     @staticmethod
-    def min_max_scaling(X_train, X_test, y_train, y_test, feature_range=(0, 1)):
-        # Нормализация признаков
-        scaler_X = MinMaxScaler(feature_range=feature_range)
-        X_train_normalized = pd.DataFrame(scaler_X.fit_transform(X_train), columns=X_train.columns)
-        X_test_normalized = pd.DataFrame(scaler_X.transform(X_test), columns=X_test.columns)
-        # Нормализация таргета
-        scaler_y = MinMaxScaler(feature_range=feature_range)
-        y_train_normalized = pd.DataFrame(scaler_y.fit_transform(y_train), columns=y_train.columns)
-        y_test_normalized = pd.DataFrame(scaler_y.transform(y_test), columns=y_test.columns)
-        return X_train_normalized, X_test_normalized, y_train_normalized, y_test_normalized
+    def MinMaxScaler(train, test, feature_range=(0, 1)):
+        scaler = MinMaxScaler(feature_range=feature_range)
+        train_normalized = pd.DataFrame(scaler.fit_transform(train), columns=train.columns)
+        test_normalized = pd.DataFrame(scaler.transform(test), columns=test.columns)
+        return train_normalized, test_normalized, scaler
 
     @staticmethod
-    def standard_scaler(X_train, X_test, y_train, y_test):
-        # Нормализация признаков
-        scaler_X = StandardScaler()
-        X_train_normalized = pd.DataFrame(scaler_X.fit_transform(X_train), columns=X_train.columns)
-        X_test_normalized = pd.DataFrame(scaler_X.transform(X_test), columns=X_test.columns)
-        # Нормализация таргета
-        scaler_y = StandardScaler()
-        y_train_normalized = pd.DataFrame(scaler_y.fit_transform(y_train), columns=y_train.columns)
-        y_test_normalized = pd.DataFrame(scaler_y.transform(y_test), columns=y_test.columns)
-        return X_train_normalized, X_test_normalized, y_train_normalized, y_test_normalized
+    def StandardScaler(train, test):
+        scaler = StandardScaler()
+        train_normalized = pd.DataFrame(scaler.fit_transform(train), columns=train.columns)
+        test_normalized = pd.DataFrame(scaler.transform(test), columns=test.columns)
+        return train_normalized, test_normalized, scaler
 
     @staticmethod
-    def robust_scaler(X_train, X_test, y_train, y_test, quantile_range=(25.0, 75.0)):
-        # Нормализация признаков
-        scaler_X = RobustScaler(quantile_range=quantile_range)
-        X_train_normalized = pd.DataFrame(scaler_X.fit_transform(X_train), columns=X_train.columns)
-        X_test_normalized = pd.DataFrame(scaler_X.transform(X_test), columns=X_test.columns)
-        # Нормализация таргета
-        scaler_y = RobustScaler(quantile_range=quantile_range)
-        y_train_normalized = pd.DataFrame(scaler_y.fit_transform(y_train), columns=y_train.columns)
-        y_test_normalized = pd.DataFrame(scaler_y.transform(y_test), columns=y_test.columns)
-        return X_train_normalized, X_test_normalized, y_train_normalized, y_test_normalized
+    def RobustScaler(train, test, quantile_range=(25.0, 75.0)):
+        scaler = RobustScaler(quantile_range=quantile_range)
+        train_normalized = pd.DataFrame(scaler.fit_transform(train), columns=train.columns)
+        test_normalized = pd.DataFrame(scaler.transform(test), columns=test.columns)
+        return train_normalized, test_normalized, scaler
 
     @staticmethod
-    def power_transform(X_train, X_test, y_train, y_test, method='yeo-johnson'):
-        # Нормализация признаков
-        transformer_X = PowerTransformer(method=method)
-        X_train_normalized = pd.DataFrame(transformer_X.fit_transform(X_train), columns=X_train.columns)
-        X_test_normalized = pd.DataFrame(transformer_X.transform(X_test), columns=X_test.columns)
-        # Нормализация таргета
-        transformer_y = PowerTransformer(method=method)
-        y_train_normalized = pd.DataFrame(transformer_y.fit_transform(y_train), columns=y_train.columns)
-        y_test_normalized = pd.DataFrame(transformer_y.transform(y_test), columns=y_test.columns)
-        return X_train_normalized, X_test_normalized, y_train_normalized, y_test_normalized
+    def PowerTransformer(train, test, method='yeo-johnson'):
+        scaler = PowerTransformer(method=method)
+        train_normalized = pd.DataFrame(scaler.fit_transform(train), columns=train.columns)
+        test_normalized = pd.DataFrame(scaler.transform(test), columns=test.columns)
+        return train_normalized, test_normalized, scaler
 
     @staticmethod
-    def quantile_transform(X_train, X_test, y_train, y_test, output_distribution='uniform'):
-        # Нормализация признаков
-        transformer_X = QuantileTransformer(output_distribution=output_distribution)
-        X_train_normalized = pd.DataFrame(transformer_X.fit_transform(X_train), columns=X_train.columns)
-        X_test_normalized = pd.DataFrame(transformer_X.transform(X_test), columns=X_test.columns)
-        # Нормализация таргета
-        transformer_y = QuantileTransformer(output_distribution=output_distribution)
-        y_train_normalized = pd.DataFrame(transformer_y.fit_transform(y_train), columns=y_train.columns)
-        y_test_normalized = pd.DataFrame(transformer_y.transform(y_test), columns=y_test.columns)
-        return X_train_normalized, X_test_normalized, y_train_normalized, y_test_normalized
+    def QuantileTransformer(train, test, output_distribution='uniform'):
+        scaler = QuantileTransformer(output_distribution=output_distribution)
+        train_normalized = pd.DataFrame(scaler.fit_transform(train), columns=train.columns)
+        test_normalized = pd.DataFrame(scaler.transform(test), columns=test.columns)
+        return train_normalized, test_normalized, scaler
+
+    @staticmethod
+    def reset_index(X_train, X_test, y_train, y_test):
+        X_train.reset_index(drop=True, inplace=True)
+        X_test.reset_index(drop=True, inplace=True)
+        y_train.reset_index(drop=True, inplace=True)
+        y_test.reset_index(drop=True, inplace=True)
+        return X_train, X_test, y_train, y_test

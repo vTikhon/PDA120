@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 import pandas as pd
+from sklearn.utils import shuffle
 
 logging.basicConfig(
     filename='app.log',  # Имя файла для записи логов
@@ -16,7 +17,7 @@ class Reader:
     def read_csv(link):
         # Чтение CSV
         df = pd.read_csv(link)
-        df = df.sample(len(df)).reset_index(drop=True)
+        df = shuffle(df).reset_index(drop=True)
         df.columns = (df.columns
                       .str.replace(r"[ \-.,]", "_", regex=True)
                       .str.lower())

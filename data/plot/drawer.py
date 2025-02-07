@@ -116,3 +116,19 @@ class Drawer:
             )
             fig.show()
 
+    @staticmethod
+    def plot_heatmap(df, method='spearman', boundary = 0.5):
+        corr = df.corr(method=method, numeric_only=True)
+        mask = (corr < boundary) & (corr > -boundary)  # Маска для скрытия слабых корреляций
+
+        plt.figure(figsize=(13, 5))
+        sns.heatmap(
+            corr,
+            annot=True,
+            fmt='.2f',
+            vmin=-1,
+            vmax=1,
+            cmap='coolwarm',
+            mask=mask  # Применяем маску
+        )
+        plt.show()
