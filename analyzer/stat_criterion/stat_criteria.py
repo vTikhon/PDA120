@@ -1,5 +1,5 @@
 from scipy.stats import kruskal, mannwhitneyu, chi2_contingency, chisquare, norm, ttest_1samp, ttest_ind, shapiro
-from scipy.stats import wilcoxon, friedmanchisquare
+from scipy.stats import wilcoxon, friedmanchisquare, shapiro
 from statsmodels.stats.contingency_tables import mcnemar, cochrans_q
 import pandas as pd
 import numpy as np
@@ -10,13 +10,6 @@ class StatCriteria:
     def __init__(self, alpha=0.05):
         self.alpha = alpha
 
-    def _prepare_groups(self, df, feature_name, target_name):
-        if feature_name not in df.columns:
-            raise KeyError(f"Колонка '{feature_name}' отсутствует в DataFrame.")
-        groups = []
-        for unique_value in df[feature_name].unique():
-            groups.append(df[df[feature_name] == unique_value][target_name])
-        return groups
 
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ДАННЫЕ) N=1
     # Одновыборочный z-критерий (параметрический для непрерывных данных)
@@ -24,9 +17,8 @@ class StatCriteria:
     # является ли среднее значение генеральной совокупности (N=1, то есть одной выборки)
     # меньше, больше или равно некоторому определенному значению.
     # Нулевая гипотеза (H0): Среднее значение выборки равно заданному значению.
-    def z_criteria(self, df, feature_name, hypothesized_mean, std):
+    def z_criteria(self, df_feature, hypothesized_mean, std):
         # Рассчитаем выборочное среднее, размер выборки, и стандартную ошибку
-        df_feature = df[feature_name]
         sample_mean = np.mean(df_feature)
         sample_size = len(df_feature)
         standard_error = std / np.sqrt(sample_size)
@@ -46,8 +38,7 @@ class StatCriteria:
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ДАННЫЕ) N=1
     # Критерий Шапиро-Уилка соответствия нормальному распределению
     # Нулевая гипотеза (H0): Данные соответствуют нормальному распределению.
-    def shapiro(self, df, feature_name):
-        df_feature = df[feature_name]
+    def shapiro(self, df_feature):
         df_feature = df_feature.dropna()
         if len(df_feature) == 0:
             raise ValueError("Выборка пуста после исключения пропусков.")
@@ -64,8 +55,7 @@ class StatCriteria:
     # НЕЗАВИСИМЫЕ ОТ ВРЕМЕНИ (ПРИ ЭТОМ НЕПРЕРЫВНЫЕ ДАННЫЕ) N=1
     # Критерий Стьюдента (одновыборочный)
     # Нулевая гипотеза (H0): Среднее значение выборки равно заданному значению.
-    def ttest_1samp(self, df, feature_name, hypothesized_mean):
-        df_feature = df[feature_name]
+    def ttest_1samp(self, df_feature, hypothesized_mean):
         df_feature = df_feature.dropna()
         if len(df_feature) == 0:
             raise ValueError("Выборка пуста после исключения пропусков.")
@@ -84,8 +74,7 @@ class StatCriteria:
     # это статистический метод, который позволяет сравнивать средние значения двух выборок и на основе результатов теста делать
     # заключение о том, различаются ли они друг от друга статистически или нет.
     # Нулевая гипотеза (H0): Средние значения в двух выборках равны (отсутствуют статистически значимые различия).
-    def ttest_ind(self, df, feature_name, target_name):
-        groups = self._prepare_groups(df, feature_name, target_name)
+    def ttest_ind(self, groups):
         if len(groups) != 2:
             raise ValueError("Для критерия Стьюдента требуется ровно две группы.")
         stat, p_value = ttest_ind(*groups)
@@ -102,11 +91,10 @@ class StatCriteria:
     # U-критерий Манна-Уитни используется для сравнения различий между ДВУМЯ (N=2) независимыми выборками,
     # когда распределение выборки не является нормальным, а размеры выборки малы
     # Нулевая гипотеза (H0): Распределения двух выборок равны (отсутствуют статистически значимые различия).
-    def mannwhitneyu(self, df, feature_name, target_name):
-        groups = self._prepare_groups(df, feature_name, target_name)
+    def mannwhitneyu(self, groups, alternative='two-sided'):
         if len(groups) != 2:
             raise ValueError("Для теста Манна-Уитни требуется ровно две группы.")
-        stat, p_value = mannwhitneyu(*groups, alternative='two-sided')
+        stat, p_value = mannwhitneyu(*groups, alternative=alternative)
         print('Mann-Whitney U test')
         print(f'U_statistic = {stat:.3f}')
         if p_value < self.alpha:
@@ -121,8 +109,7 @@ class StatCriteria:
     # Критерий Краскела - Уоллиса используемый для определения, есть ли статистически значимые различия
     # между медианами ТРЁХ И БОЛЕЕ (n>=3) независимых групп
     # Нулевая гипотеза (H0): Медианы всех групп равны (отсутствуют статистически значимые различия).
-    def kruskal(self, df, feature_name, target_name):
-        groups = self._prepare_groups(df, feature_name, target_name)
+    def kruskal(self, groups):
         if len(groups) < 2:
             raise ValueError("Для теста Краскела-Уоллиса требуется хотя бы две группы.")
         stat, p_value = kruskal(*groups)
@@ -160,10 +147,10 @@ class StatCriteria:
     # Критерий независимости хи-квадрат — используется для определения наличия значимой связи
     # между ДВУМЯ (N=2) категориальными переменными
     # Нулевая гипотеза (H0): Две переменные независимы (отсутствуют статистически значимые связи).
-    def chi2_contingency(self, df, feature_name, target_name):
-        if df[feature_name].nunique() < 2 or df[target_name].nunique() < 2:
-            raise KeyError(f"Ошибка: для переменных '{feature_name}' и '{target_name}' должно быть минимум 2 уникальных значения.")
-        contingency_table = pd.crosstab(df[feature_name], df[target_name])
+    def chi2_contingency(self, groups):
+        if any(len(group.unique()) < 2 for group in groups):
+            raise ValueError("Ошибка: должно быть минимум 2 уникальных значения в каждой переменной.")
+        contingency_table = pd.crosstab(*groups)
         stat, p_value, dof, expected = chi2_contingency(contingency_table)
         print('Chi-square test')
         print(f'chisq_statistic = {stat:.3f}, dof = {dof:.3f}')
@@ -180,12 +167,9 @@ class StatCriteria:
     # Критерий Вилкоксона используется для сравнения ДВУХ (N=2) связанных (зависимых) выборок
     # по количественному или порядковому признаку.
     # Нулевая гипотеза (H0): Различия между парами значений равны (отсутствуют статистически значимые различия).
-    def wilcoxon(self, df, feature_name, target_name):
-        groups = self._prepare_groups(df, feature_name, target_name)
+    def wilcoxon(self, groups):
         if len(groups) != 2:
             raise ValueError("Для теста Вилкоксона требуется ровно две группы.")
-        if len(feature_name) != len(target_name):
-            raise ValueError("Выборки должны быть одинаковой длины для теста Уилкоксона.")
         stat, p_value = wilcoxon(*groups)
         print('Wilcoxon test')
         print(f'Wilcoxon-statistic = {stat:.3f}')
@@ -202,8 +186,7 @@ class StatCriteria:
     # Критерий Фридмана используется для сравнения ТРЁХ И БОЛЕЕ (N>=3) связанных (зависимых) выборок
     # по количественному или порядковому признаку.
     # Нулевая гипотеза (H0): Распределения во всех группах равны (отсутствуют статистически значимые различия).
-    def friedmanchisquare(self, df, feature_name, target_name):
-        groups = self._prepare_groups(df, feature_name, target_name)
+    def friedmanchisquare(self, groups):
         if len(groups) < 2:
             raise ValueError("Для теста Фридмана требуется хотя бы две группы.")
         stat, p_value = friedmanchisquare(*groups)
@@ -222,10 +205,10 @@ class StatCriteria:
     # Тест Макнемара используется для определения наличия статистически значимой разницы в пропорциях
     # между ПАРНЫМИ (N=2) данными.
     # Нулевая гипотеза (H0): Доли согласия в двух связанных группах равны (отсутствуют статистически значимые различия).
-    def mcnemar(self, df, feature_name, target_name):
-        if df[feature_name].nunique() < 2 or df[target_name].nunique() < 2:
-            raise KeyError(f"Ошибка: для переменных '{feature_name}' и '{target_name}' должно быть минимум 2 уникальных значения.")
-        contingency_table = pd.crosstab(df[feature_name], df[target_name])
+    def mcnemar(self, groups):
+        if any(len(group.unique()) < 2 for group in groups):
+            raise ValueError("Ошибка: должно быть минимум 2 уникальных значения в каждой переменной.")
+        contingency_table = pd.crosstab(*groups)
         print("McNemar's test")
         result = mcnemar(contingency_table, exact=True)  # Используется exact=True для точного теста (если требуется)
         print(result)
@@ -235,13 +218,14 @@ class StatCriteria:
     # Q-тест Кокрана (Cochran's Q test) — это статистический тест,
     # используемый для определения наличия различий в доли успеха в нескольких (N>=3) связанных группах.
     # Q-тест Кокрана применяется, когда данные являются бинарными (успех/неудача) и измерены повторно в различных условиях.
-    def cochrans_q(self, df, feature_name, target_name):
-        if df[feature_name].nunique() < 2 or df[target_name].nunique() < 2:
-            raise KeyError(f"Ошибка: для переменных '{feature_name}' и '{target_name}' должно быть минимум 2 уникальных значения.")
-        contingency_table = pd.crosstab(df[feature_name], df[target_name])
+    def cochrans_q(self, groups):
+        if any(len(group.unique()) < 2 for group in groups):
+            raise ValueError("Ошибка: должно быть минимум 2 уникальных значения в каждой переменной.")
+        contingency_table = pd.crosstab(*groups)
         print("Cochran's Q test")
         result = cochrans_q(contingency_table)
         print(result)
         return result
+
 
 

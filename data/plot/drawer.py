@@ -1,8 +1,11 @@
+import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
+from analyzer.stat_criterion import StatCriteria
 
 
 class Drawer:
@@ -132,3 +135,23 @@ class Drawer:
             mask=mask  # Применяем маску
         )
         plt.show()
+
+    @staticmethod
+    def plot_heatmap_category(df):
+        categorical_features = df.select_dtypes(include='object').columns
+        corr_matrix = pd.DataFrame(index=categorical_features, columns=categorical_features)
+        for i in categorical_features:
+            for j in categorical_features:
+                if i == j:
+                    corr_matrix.loc[i, j] = 0
+                else:
+                    groups = [df[i], df[j]]
+                    stat, p_value, _, _ = StatCriteria().chi2_contingency(groups)
+                    corr_matrix.loc[i, j] = stat if stat is not None else 0
+
+        corr_matrix = corr_matrix.astype(float)
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(corr_matrix, annot=True, fmt='.2f', cmap='coolwarm', square=True, cbar_kws={"shrink": .8}, vmin=0)
+        plt.title('Тепловая карта корреляции категориальных признаков (stat chi2_contingency)')
+        plt.show()
+
