@@ -3,6 +3,7 @@ from scipy.stats import wilcoxon, friedmanchisquare, shapiro
 from statsmodels.stats.contingency_tables import mcnemar, cochrans_q
 import pandas as pd
 import numpy as np
+from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 
 class StatCriteria:
@@ -227,5 +228,11 @@ class StatCriteria:
         print(result)
         return result
 
-
+    # Допущение о мультиколлинеарности
+    def VIF(self, df, target_name):
+        numeric_col = df.drop(columns=target_name).describe().columns
+        vif_data = pd.DataFrame()
+        vif_data.index = numeric_col
+        vif_data['VIF'] = [variance_inflation_factor(df[numeric_col].values, i) for i in range(len(numeric_col))]
+        return vif_data
 

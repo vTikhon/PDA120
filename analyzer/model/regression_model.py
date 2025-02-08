@@ -31,7 +31,6 @@ class RegressionModel:
         model = OLS(y_train, X_train_plus_const).fit()
         y_pred = pd.DataFrame(model.predict(X_test_plus_const), columns=y_test.columns)
         print(model.summary())
-        MetricCalculator.show_regression_metrics(y_test, y_pred)
         return y_test, y_pred, model
 
     def Lasso(self, X_train, X_test, y_train, y_test,
@@ -39,7 +38,6 @@ class RegressionModel:
         model = Lasso(alpha=alpha)
         model.fit(X_train, y_train)
         y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
-        MetricCalculator.show_regression_metrics(y_test, y_pred)
         print('__________')
         print("Коэффициенты Lasso-регрессии:")
         print(*[f"{feature}: {coef:.2f}" for feature, coef in zip(X_train.columns, model.coef_.flatten())], sep='\n')
@@ -50,7 +48,6 @@ class RegressionModel:
         model = Ridge(alpha=alpha)
         model.fit(X_train, y_train)
         y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
-        MetricCalculator.show_regression_metrics(y_test, y_pred)
         print('__________')
         print("Коэффициенты Ridge-регрессии:")
         print(*[f"{feature}: {coef:.2f}" for feature, coef in zip(X_train.columns, model.coef_.flatten())], sep='\n')
@@ -64,7 +61,6 @@ class RegressionModel:
         result = model.fit()
         y_pred = result.predict(X_test_plus_const)
         print(result.summary())
-        MetricCalculator.show_regression_metrics(y_test, y_pred)
         return y_test, y_pred, model
 
     def SVR(self, X_train, X_test, y_train, y_test,
@@ -72,5 +68,4 @@ class RegressionModel:
         model = svm.SVR(kernel=kernel, C=C, epsilon=epsilon)
         model.fit(X_train, y_train.values.ravel())
         y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
-        MetricCalculator.show_regression_metrics(y_test, y_pred)
         return y_test, y_pred, model

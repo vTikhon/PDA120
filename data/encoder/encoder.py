@@ -1,6 +1,5 @@
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import category_encoders as ce
-from sklearn.compose import ColumnTransformer
 import pandas as pd
 
 

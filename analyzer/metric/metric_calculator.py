@@ -40,3 +40,9 @@ class MetricCalculator:
         # AUC-ROC — оценка качества вероятностных предсказаний
         if y_prob is not None:
             print(f'ROC-AUC: {roc_auc_score(y_test, y_prob, multi_class="ovr"):.2f}')
+
+    @staticmethod
+    def inverse_transform(y_test, y_pred, scaler_y):
+        y_test = pd.DataFrame(scaler_y.inverse_transform(y_test), columns=y_test.columns)
+        y_pred = pd.DataFrame(scaler_y.inverse_transform(y_pred), columns=y_pred.columns)
+        return y_test, y_pred
