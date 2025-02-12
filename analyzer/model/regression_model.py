@@ -1,11 +1,9 @@
 import pandas as pd
 import statsmodels.api as sm
 from statsmodels.regression.linear_model import OLS
-from sklearn.linear_model import Lasso
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso, Ridge, BayesianRidge
 from sklearn import svm
 from sklearn.preprocessing import PolynomialFeatures
-from analyzer.metric import MetricCalculator
 
 
 class RegressionModel:
@@ -40,7 +38,7 @@ class RegressionModel:
         y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
         print('__________')
         print("Коэффициенты Lasso-регрессии:")
-        print(*[f"{feature}: {coef:.2f}" for feature, coef in zip(X_train.columns, model.coef_.flatten())], sep='\n')
+        print(pd.DataFrame({'Feature': X_train.columns, 'Coefficient': model.coef_}))
         return y_test, y_pred, model
 
     def Ridge(self, X_train, X_test, y_train, y_test,
@@ -50,17 +48,25 @@ class RegressionModel:
         y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
         print('__________')
         print("Коэффициенты Ridge-регрессии:")
-        print(*[f"{feature}: {coef:.2f}" for feature, coef in zip(X_train.columns, model.coef_.flatten())], sep='\n')
+        print(pd.DataFrame({'Feature': X_train.columns, 'Coefficient': model.coef_}))
+        return y_test, y_pred, model
+
+    def BayesianRidge(self, X_train, X_test, y_train, y_test):
+        if isinstance(y_train, pd.DataFrame):
+            y_train = y_train.values.ravel()
+        model = BayesianRidge().fit(X_train, y_train)
+        y_pred = pd.DataFrame(model.predict(X_test), index=y_test.index, columns=y_test.columns)
+        print("Коэффициенты Байесовской регрессии:")
+        print(pd.DataFrame({'Feature': X_train.columns, 'Coefficient': model.coef_}))
         return y_test, y_pred, model
 
     def GLM(self, X_train, X_test, y_train, y_test,
             prepend=False, family=sm.families.Gamma(link=sm.families.links.Log())):
         X_train_plus_const = sm.add_constant(X_train, prepend=prepend)
         X_test_plus_const = sm.add_constant(X_test, prepend=prepend)
-        model = sm.GLM(y_train, X_train_plus_const, family=family)
-        result = model.fit()
-        y_pred = result.predict(X_test_plus_const)
-        print(result.summary())
+        model = sm.GLM(y_train, X_train_plus_const, family=family).fit()
+        y_pred = pd.DataFrame(model.predict(X_test_plus_const), columns=y_test.columns)
+        print(model.summary())
         return y_test, y_pred, model
 
     def SVR(self, X_train, X_test, y_train, y_test,

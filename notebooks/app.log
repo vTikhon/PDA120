@@ -37,3 +37,83 @@
 2025-02-07 22:59:07,209 - INFO - PATH to CSV-file: C:\Users\Tikhon\Documents\PycharmProjects\PDA120_practice2\notebooks\dataset\RK_554B_data.csv
 2025-02-07 22:59:44,135 - INFO - PATH to CSV-file: C:\Users\Tikhon\Documents\PycharmProjects\PDA120_practice2\notebooks\dataset\RK_554B_data.csv
 2025-02-07 23:00:39,463 - INFO - PATH to CSV-file: C:\Users\Tikhon\Documents\PycharmProjects\PDA120_practice2\notebooks\dataset\RK_554B_data.csv
+2025-02-11 19:51:14,639 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-11 19:51:14,640 - WARNING - g++ not detected ! Theano will be unable to execute optimized C-implementations (for both CPU and GPU) and will default to Python implementations. Performance will be severely degraded. To remove this warning, set Theano flags cxx to an empty string.
+2025-02-11 19:51:14,832 - WARNING - Using NumPy C-API based implementation for BLAS functions.
+2025-02-11 19:53:02,202 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-11 19:53:02,202 - WARNING - g++ not detected ! Theano will be unable to execute optimized C-implementations (for both CPU and GPU) and will default to Python implementations. Performance will be severely degraded. To remove this warning, set Theano flags cxx to an empty string.
+2025-02-11 19:53:02,458 - WARNING - Using NumPy C-API based implementation for BLAS functions.
+2025-02-11 19:57:36,844 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-11 19:57:36,844 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-11 20:05:02,957 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-11 20:05:02,957 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-11 20:10:19,445 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 20:10:25,754 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-11 20:10:25,755 - INFO - NUTS: [alpha, beta, sigma]
+2025-02-11 20:14:21,527 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 20:14:27,801 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-11 20:14:27,802 - INFO - NUTS: [alpha, beta, sigma]
+2025-02-11 20:34:48,949 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-11 20:34:48,949 - WARNING - g++ not detected ! Theano will be unable to execute optimized C-implementations (for both CPU and GPU) and will default to Python implementations. Performance will be severely degraded. To remove this warning, set Theano flags cxx to an empty string.
+2025-02-11 20:36:13,456 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 20:36:19,943 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-11 20:36:19,943 - INFO - NUTS: [alpha, beta, sigma]
+2025-02-11 20:44:29,942 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 20:44:36,396 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-11 20:44:36,396 - INFO - NUTS: [bias, weight, sigma]
+2025-02-11 20:56:43,250 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 20:56:49,632 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-11 20:56:49,632 - INFO - NUTS: [bias, weight, sigma]
+2025-02-11 21:07:42,480 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 21:07:48,856 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-11 21:07:48,857 - INFO - NUTS: [bias, weight, sigma]
+2025-02-11 21:25:31,545 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 21:29:34,076 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-11 21:29:34,076 - INFO - NUTS: [bias, weight, sigma]
+2025-02-11 21:38:41,111 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 21:42:45,753 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-11 21:42:45,753 - INFO - NUTS: [bias, weight, sigma]
+2025-02-11 22:34:13,234 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 22:38:15,372 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-11 22:38:15,372 - INFO - NUTS: [bias, weight, sigma]
+2025-02-11 23:00:20,600 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-11 23:00:20,600 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-11 23:00:30,804 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 23:00:31,808 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-11 23:00:31,808 - INFO - NUTS: [b, w_1, sigma]
+2025-02-11 23:00:53,822 - INFO - Sampling 4 chains for 50 tune and 1_000 draw iterations (200 + 4_000 draws total) took 22 seconds.
+2025-02-11 23:04:33,535 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 23:16:26,373 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-11 23:16:26,373 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-11 23:18:04,563 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-11 23:18:04,563 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-11 23:50:38,169 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-11 23:54:36,798 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-11 23:54:36,798 - INFO - NUTS: [bias, weight, sigma]
+2025-02-12 15:43:24,218 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-12 15:43:24,218 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-12 15:52:14,684 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-12 15:52:14,684 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-12 15:56:55,735 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-12 15:56:55,735 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-12 15:58:47,441 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-12 15:58:47,441 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-12 15:59:50,585 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-12 15:59:50,585 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-12 16:00:47,947 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-12 16:00:47,947 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-12 16:02:39,854 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-12 16:02:39,854 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-12 16:04:32,542 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-12 16:04:32,542 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-12 16:05:05,308 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-12 16:05:05,308 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-12 16:16:29,562 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-12 16:21:43,268 - WARNING - g++ not available, if using conda: `conda install m2w64-toolchain`
+2025-02-12 16:21:43,268 - WARNING - g++ not detected!  PyTensor will be unable to compile C-implementations and will default to Python. Performance may be severely degraded. To remove this warning, set PyTensor flags cxx to an empty string.
+2025-02-12 16:21:53,317 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-12 16:21:54,477 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-12 16:21:54,477 - INFO - NUTS: [bias, weight, sigma]
+2025-02-12 17:27:00,960 - INFO - Initializing NUTS using jitter+adapt_diag...
+2025-02-12 17:27:01,530 - INFO - Multiprocess sampling (4 chains in 4 jobs)
+2025-02-12 17:27:01,531 - INFO - NUTS: [bias, weight, sigma]
