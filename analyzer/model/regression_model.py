@@ -4,6 +4,7 @@ from statsmodels.regression.linear_model import OLS
 from sklearn.linear_model import Lasso, Ridge, BayesianRidge
 from sklearn import svm
 from sklearn.preprocessing import PolynomialFeatures
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 
 
 class RegressionModel:
@@ -72,6 +73,25 @@ class RegressionModel:
     def SVR(self, X_train, X_test, y_train, y_test,
             kernel='rbf', C=1.0, epsilon=0.1):
         model = svm.SVR(kernel=kernel, C=C, epsilon=epsilon)
+        model.fit(X_train, y_train.values.ravel())
+        y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
+        return y_test, y_pred, model
+
+    def RandomForestRegressor(self, X_train, X_test, y_train, y_test,
+                              max_depth=5,
+                              min_samples_split=4,
+                              min_samples_leaf=2,
+                              n_estimators=100):
+        model = RandomForestRegressor(max_depth=max_depth,
+                                      min_samples_split=min_samples_split,
+                                      min_samples_leaf=min_samples_leaf,
+                                      n_estimators=n_estimators)
+        model.fit(X_train, y_train.values.ravel())
+        y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
+        return y_test, y_pred, model
+
+    def GradientBoostingRegressor(self, X_train, X_test, y_train, y_test):
+        model = GradientBoostingRegressor()
         model.fit(X_train, y_train.values.ravel())
         y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
         return y_test, y_pred, model

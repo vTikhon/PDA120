@@ -1,6 +1,5 @@
-import numpy as np
 import pandas as pd
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, mean_absolute_percentage_error, root_mean_squared_error
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 
 
@@ -8,27 +7,19 @@ class MetricCalculator:
 
     @staticmethod
     def show_regression_metrics(y_test, y_pred):
-        if isinstance(y_test, pd.DataFrame):
-            y_test = y_test.values.flatten()
-        if isinstance(y_pred, pd.DataFrame):
-            y_pred = y_pred.values.flatten()
         # Коэффициент детерминации (R_square)
         print(f'R²: {r2_score(y_test, y_pred):.3f}')
         # Средняя абсолютная ошибка (Mean Absolute Error)
         print(f'MAE: {mean_absolute_error(y_test, y_pred):.2f}')
         # Средняя абсолютная процентная ошибка (Mean Absolute Percentage Error)
-        print(f'MAPE: {(np.mean(np.abs((y_test - y_pred) / y_test)) * 100):.0f}%')
+        print(f'MAPE: {mean_absolute_percentage_error(y_test, y_pred):.0f}%')
         # Корень из средней квадратичной ошибки (Root Mean Square Error)
-        print(f'RMSE: {np.sqrt(mean_squared_error(y_test, y_pred)):.0f}')
+        print(f'RMSE: {root_mean_squared_error(y_test, y_pred):.0f}')
         # Среднеквадратичная ошибка (Mean Square Error)
         print(f'MSE: {mean_squared_error(y_test, y_pred):.0f}')
 
     @staticmethod
     def show_classification_metrics(y_test, y_pred, y_prob=None):
-        if isinstance(y_test, pd.DataFrame):
-            y_test = y_test.values.flatten()
-        if isinstance(y_pred, pd.DataFrame):
-            y_pred = y_pred.values.flatten()
         # Метрика корректности прогнозов — доля верно предсказанных классов
         print(f'Accuracy: {accuracy_score(y_test, y_pred):.2f}')
         # Метрика точности — доля объектов, предсказанных как положительные
