@@ -5,6 +5,7 @@ from sklearn.linear_model import Lasso, Ridge, BayesianRidge
 from sklearn import svm
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.multioutput import MultiOutputRegressor
 
 
 class RegressionModel:
@@ -72,8 +73,8 @@ class RegressionModel:
 
     def SVR(self, X_train, X_test, y_train, y_test,
             kernel='rbf', C=1.0, epsilon=0.1):
-        model = svm.SVR(kernel=kernel, C=C, epsilon=epsilon)
-        model.fit(X_train, y_train.values.ravel())
+        model = MultiOutputRegressor(svm.SVR(kernel=kernel, C=C, epsilon=epsilon))
+        model.fit(X_train, y_train)
         y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
         return y_test, y_pred, model
 
@@ -82,16 +83,16 @@ class RegressionModel:
                               min_samples_split=4,
                               min_samples_leaf=2,
                               n_estimators=100):
-        model = RandomForestRegressor(max_depth=max_depth,
+        model = MultiOutputRegressor(RandomForestRegressor(max_depth=max_depth,
                                       min_samples_split=min_samples_split,
                                       min_samples_leaf=min_samples_leaf,
-                                      n_estimators=n_estimators)
-        model.fit(X_train, y_train.values.ravel())
+                                      n_estimators=n_estimators))
+        model.fit(X_train, y_train)
         y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
         return y_test, y_pred, model
 
     def GradientBoostingRegressor(self, X_train, X_test, y_train, y_test):
-        model = GradientBoostingRegressor()
-        model.fit(X_train, y_train.values.ravel())
+        model = MultiOutputRegressor(GradientBoostingRegressor())
+        model.fit(X_train, y_train)
         y_pred = pd.DataFrame(model.predict(X_test), columns=y_test.columns)
         return y_test, y_pred, model
